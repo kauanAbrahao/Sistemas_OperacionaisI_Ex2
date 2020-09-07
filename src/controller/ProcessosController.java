@@ -17,11 +17,11 @@ public class ProcessosController {
 	public String identificaSO() {
 		
 		String so = System.getProperty("os.name");
-		if (so.contains("Windows") || so.contains("Liunx")) {
-			JOptionPane.showMessageDialog(null, "Detectamos que você utiliza o " + so + ". Seu Sistema Operacional é compatível com o Process Killer!");
+		if (so.contains("Windows") || so.contains("Linux")) {
+			JOptionPane.showMessageDialog(null, "Detectamos que vocÃª utiliza o " + so + ". Seu Sistema Operacional Ã© compatÃ­vel com o Process Killer!");
 		}
 		else {
-			JOptionPane.showMessageDialog(null, "Detectamos que você utiliza o " + so + ". Infelizmente, seu Sistema Operacional não é compatível com"
+			JOptionPane.showMessageDialog(null, "Detectamos que vocÃª utiliza o " + so + ". Infelizmente, seu Sistema Operacional nï¿½o ï¿½ compatï¿½vel com"
 					+ " o Process Killer. As funcionalidades do programa podem estar comprometidas");
 		}
 		return so;
@@ -34,7 +34,7 @@ public class ProcessosController {
 			Process p = Runtime.getRuntime().exec("tasklist");
 			InputStream fluxo = p.getInputStream();//
 			InputStreamReader leitor = new InputStreamReader(fluxo);//
-			BufferedReader buffer = new BufferedReader(leitor); //essas linhas são padrões para leitura de processos.
+			BufferedReader buffer = new BufferedReader(leitor); //essas linhas sï¿½o padrï¿½es para leitura de processos.
 			String linha = buffer.readLine();
 			while (linha != null) {
 				System.out.println(linha);
@@ -43,7 +43,7 @@ public class ProcessosController {
 			fluxo.close();
 			leitor.close();
 			buffer.close();
-			JOptionPane.showMessageDialog(null, "Os processos ativos estão listados em seu console!");
+			JOptionPane.showMessageDialog(null, "Os processos ativos estÃ£o listados em seu console!");
 			
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -52,20 +52,49 @@ public class ProcessosController {
 		
 		else {
 			if (so.contains("Linux")) {
-				// bloco de código
+				Process p;
+				try {
+					p = Runtime.getRuntime().exec("ps aux");
+					InputStream fluxo = p.getInputStream();//
+					InputStreamReader leitor = new InputStreamReader(fluxo);//
+					BufferedReader buffer = new BufferedReader(leitor); //essas linhas sï¿½o padrï¿½es para leitura de processos.
+					String linha = buffer.readLine();
+					while (linha != null) {
+						System.out.println(linha);
+						linha = buffer.readLine();
+					}
+					buffer.close();
+					fluxo.close();
+					leitor.close();
+					
+				} catch (IOException e) {
+					
+					e.printStackTrace();
+				}
+				JOptionPane.showMessageDialog(null, "Os processos ativos estÃ£o listados em seu console!");
+				
+				
 			}
 			else {
-				JOptionPane.showMessageDialog(null, "Infelizmente, o programa não é compatível com seu Sistema Operacional");
+				JOptionPane.showMessageDialog(null, "Infelizmente, o programa nÃ£o Ã© compatÃ­vel com seu Sistema Operacional");
 			}
 		}
 	}
 	
 	//---------------------//----------------------//-------------------------//----------------------//--------------------//-------------
 	public void pidMataProcesso(int pid, String so) {
-		String cmdPID = "TASKKILL /PID ";
 		StringBuffer buffer = new StringBuffer();
-		buffer.append(cmdPID);
-		buffer.append(pid);
+		if (so.contains("Windows")) {
+			String cmdPID = "TASKKILL /PID ";
+			buffer.append(cmdPID);
+			buffer.append(pid);
+		}
+		else {
+			String cmdPID = "kill -9 ";
+			buffer.append(cmdPID);
+			buffer.append(pid);
+		}
+		
 		
 		callProcess(buffer.toString(), so);
 		
@@ -73,6 +102,7 @@ public class ProcessosController {
 	
 	//---------------//----------------//--------------------------------//-----------------------------------//-------------------//-------
 	public void nomeMataProcesso(String nome, String so) {
+		if (so.contains("Windows")) {
 		String cmdNome = "TASKKILL /IM ";
 		StringBuffer buffer = new StringBuffer();
 		buffer.append(cmdNome);
@@ -84,6 +114,24 @@ public class ProcessosController {
 		
 		callProcess(buffer.toString(), so);
 	}
+		else {
+			if (so.contains("Linux")) {
+				String cmdNome = ("pkill -f ");
+				StringBuffer buffer = new StringBuffer();
+				buffer.append(cmdNome);
+				buffer.append(nome);
+				callProcess(buffer.toString(),so);
+			}
+			
+			else {
+				
+				JOptionPane.showMessageDialog(null, "Seu sistema nÃ£o Ã© compatÃ­vel com esta aplicaÃ§Ã£o!");
+			}
+			
+			
+		}
+	}
+	 
 	
 	//-----------------------//------------------------------//-----------------------------------//--------------------------------//---
 	void callProcess(String process, String so) {
@@ -110,7 +158,12 @@ public class ProcessosController {
 		}
 	}
 	else {
-		// bloco de código Linux
+		try {
+			Runtime.getRuntime().exec(process);
+		} catch (IOException e) {
+			
+			e.printStackTrace();
+		}
 	}
 	JOptionPane.showMessageDialog(null, "Processo finalizado");
 	}

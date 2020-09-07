@@ -14,8 +14,8 @@ public class Principal {
 		String so = metodo.identificaSO();
 		
 		while (manter) {
-			int input = Integer.parseInt(JOptionPane.showInputDialog("Você tem diversas opções. Escolha: " + "\n" + "1 - Listar os processos ativos"
-		+ "2 - Matar o processo através do PID " + "\n" + "3 - Matar o processo através do Nome" + "\n" + "0 - Finalizar"));
+			int input = Integer.parseInt(JOptionPane.showInputDialog("VocÃª tem diversas opÃ§Ãµes. Escolha: " + "\n" + "1 - Listar os processos ativos"
+		+ "\n" + "2 - Matar o processo atravÃ©s do PID " + "\n" + "3 - Matar o processo atravÃ©s do Nome" + "\n" + "0 - Finalizar"));
 			
 			switch(input) {
 			
@@ -38,7 +38,7 @@ public class Principal {
 				JOptionPane.showMessageDialog(null, "Finalizado");
 				break;
 				
-			default: JOptionPane.showMessageDialog(null, "Opção inválida. Tente novamente");
+			default: JOptionPane.showMessageDialog(null, "Opï¿½ï¿½o invï¿½lida. Tente novamente");
 			break;
 				
 			}
